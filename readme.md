@@ -4,11 +4,11 @@
 * VScode + GUI를 혼합하여 활용! (SSH?)
 * OpenSSH 서버 설치
 	* https://eehoeskrap.tistory.com/763
-	* https://biomadscientist.tistory.com/110#:~:text=3.%20%EB%8B%A4%EC%9D%8C%20VS%20code%EB%A5%BC%20%ED%95%9C%EB%B2%88%20%EC%9E%AC%EC%8B%9C%EC%9E%91%ED%95%98%EA%B1%B0%EB%82%98%20%ED%84%B0%EB%AF%B8%EB%84%90,%EC%84%A4%EC%A0%95%EB%90%9C%20%ED%84%B0%EB%AF%B8%EB%84%90%EC%9D%B4%20%EC%97%B4%EB%A6%AC%EB%8A%94%20%EA%B2%83%EC%9D%84%20%ED%99%95%EC%9D%B8%ED%95%A0%20%EC%88%98%20%EC%9E%88%EB%8B%A4.
+	  * https://biomadscientist.tistory.com/110#:~:text=3.%20%EB%8B%A4%EC%9D%8C%20VS%20code%EB%A5%BC%20%ED%95%9C%EB%B2%88%20%EC%9E%AC%EC%8B%9C%EC%9E%91%ED%95%98%EA%B1%B0%EB%82%98%20%ED%84%B0%EB%AF%B8%EB%84%90,%EC%84%A4%EC%A0%95%EB%90%9C%20%ED%84%B0%EB%AF%B8%EB%84%90%EC%9D%B4%20%EC%97%B4%EB%A6%AC%EB%8A%94%20%EA%B2%83%EC%9D%84%20%ED%99%95%EC%9D%B8%ED%95%A0%20%EC%88%98%20%EC%9E%88%EB%8B%A4.
 	* ![[Pasted image 20250707155152.png]]
 * https://pyautogui.readthedocs.io/en/latest/quickstart.html#screenshot-functions
 * https://wikidocs.net/85709
-* 
+
 ```powershell
 # Proceed in admin mode!
 # Install Conda/Vscode before
@@ -26,7 +26,7 @@ python main.py
 ```
 ## Code
 ```python title=main.py
-  import pyautogui as pag
+import pyautogui as pag
 from waiting import wait
 import time
 from PIL import Image
