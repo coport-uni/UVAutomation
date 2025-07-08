@@ -30,8 +30,14 @@ import pyautogui as pag
 from waiting import wait
 import time
 from PIL import Image
+from sshmanager import SSHManager
 
 class UVAutomation():
+    def __init__(self):
+        self.serverpath = "/workspace/input_image_from_system"
+
+        self.sm = SSHManager()
+        self.sm.create_ssh_client(hostname = "10.16.21.197", port = "17042", username = "root", password = "pealauto")
 
     def get_mouse_position(self):
         '''
@@ -45,7 +51,7 @@ class UVAutomation():
 
         return mouse_current_position
 
-    def move_mouse_position(self, x_position : int, y_position : int, is_click : bool):
+    def move_mouse_position(self, position_x : int, position_y : int, is_click : bool):
         '''
         This function moves mouse pointer to desginated x,y coordinate. Also it can click if is_click is True.
 
@@ -55,9 +61,9 @@ class UVAutomation():
         delay_second = 0.2
 
         if is_click is True:
-            pag.click(x = x_position, y = y_position, clicks = 2, interval = 0.2, button='left')
+            pag.click(x = position_x, y = position_y, clicks = 2, interval = 0.2, button='left')
         else:
-            pag.moveTo(x = x_position, y = y_position, duration = delay_second)
+            pag.moveTo(x = position_x, y = position_y, duration = delay_second)
 
         return True
     
@@ -72,17 +78,16 @@ class UVAutomation():
 
         return True
 
-    def run_image_trim(self, filepath):
+    def run_image_trim(self, filepath_output : str):
         '''
         This function trims image with designated size and location. 
 
         Input : str
         Output : None
         '''
-        img = Image.open(filepath)
-        # (540,490) / (1030,630)
+        img = Image.open(filepath_output)
         img_output = img.crop((540,490,1030,650))
-        img_output.save(filepath, "PNG")
+        img_output.save(filepath_output, "PNG")
         # img_output.show(title = "Result")
 
     def get_user_confirmation(self):
@@ -111,18 +116,16 @@ class UVAutomation():
         '''
         # Clear workspace
         pag.hotkey("win", "d")
-
-        # Ask user's confirmation
-        wait(lambda: self.get_user_confirmation(), timeout_seconds=60, waiting_for="Finish of comfirmation")
         
         # Move to 45,227 and wait until initialization of spectrometer is complete
+        time.sleep(2)
         self.move_mouse_position(45, 227, True)
-        wait(lambda: self.get_status("Initialize.png"), timeout_seconds=60, waiting_for="Start of initialization")
-        wait(lambda: self.get_status("Ready.png"), timeout_seconds=60 * 5, waiting_for="Finish of initialization")
+        wait(lambda: self.get_scenario_status("Initialize.png"), timeout_seconds=60, waiting_for="Start of initialization")
+        wait(lambda: self.get_scenario_status("Ready.png"), timeout_seconds=60 * 5, waiting_for="Finish of initialization")
 
         # Move to 1899,318 and wait until result is complete
         self.move_mouse_position(1899, 318, True)
-        wait(lambda: self.get_status("Report.png"), timeout_seconds=60 * 2, waiting_for="Finish of measurement")
+        wait(lambda: self.get_scenario_status("Report.png"), timeout_seconds=60 * 2, waiting_for="Finish of measurement")
 
         # Check result of measurement and save as image
         self.move_mouse_position(1885, 210, True)
@@ -135,6 +138,7 @@ class UVAutomation():
 
         # Trim image and send to server
         self.run_image_trim(filepath_output)
+        self.sm.send_file_to(filepath_output, self.serverpath)
 
         # Shutdown spectrometer program
         time.sleep(2)
@@ -169,20 +173,21 @@ class UVAutomation():
 
 def main():
     '''
-    This function is main code.  
+    This function is main code. it uses external sshmanager module to send image.
 
     Input : None
     Output : None
     '''
+    # Ask user's confirmation
     ua = UVAutomation()
+    wait(lambda: ua.get_user_confirmation(), timeout_seconds=60, waiting_for="Finish of comfirmation")
 
-    ua.run_scenario_1("C:\\Users\\Peal_UV\\Desktop\\Workspace\\UVAutomation\\output\\data.png")
-    # while True:
-    #     print(ua.get_mouse_position())
+    for i in range(1):
+        filepath = f"C:\\Users\\Peal_UV\\Desktop\\Workspace\\UVAutomation\\output\\data{i}.png"
+        ua.run_scenario_1(filepath)
 
 if __name__ == "__main__":
-    main()
-        
+    main()   
 ```
 ##  Result
 ![data.png](https://github.com/coport-uni/UVAutomation/blob/main/output/data.png)
