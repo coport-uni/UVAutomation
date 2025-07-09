@@ -6,6 +6,12 @@ from sshmanager import SSHManager
 
 class UVAutomation():
     def __init__(self):
+        '''
+        This function set variables for SCP.
+
+        Input : None
+        Output : None
+        '''
         self.serverpath = "/workspace/input_image_from_system"
 
         self.sm = SSHManager()
